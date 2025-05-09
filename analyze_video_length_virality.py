@@ -73,8 +73,18 @@ def create_metrics(df):
     df['Watch Time Efficiency'] = (df['Watch time (hours)'] / (df['Duration'] * df['Engaged views'])) * 3600
 
     # Virality and growth metrics
-    df['Virality Score'] = (df['Likes'] * 0.6 + df['Comments added'] * 0.4) / df['Engaged views'] * 100
-    df['Growth Potential'] = df['Subscribers Gained per 1000 Engaged Views'] * df['Engagement Rate']
+    # Handle division by zero or missing data
+    df['Virality Score'] = np.where(
+        (df['Engaged views'].isnull()) | (df['Engaged views'] == 0),
+        0,  # Set to 0 if engaged views is null or zero
+        (df['Likes'].fillna(0) * 0.6 + df['Comments added'].fillna(0) * 0.4) / df['Engaged views'] * 100
+    )
+
+    # Replace infinite values with 0
+    df['Virality Score'] = df['Virality Score'].replace([np.inf, -np.inf], 0)
+
+    # Growth potential with similar handling
+    df['Growth Potential'] = df['Subscribers Gained per 1000 Engaged Views'].fillna(0) * df['Engagement Rate'].fillna(0)
 
     # Create engaged views buckets
     engaged_conditions = [
@@ -100,7 +110,7 @@ def create_metrics(df):
 
     # Create duration buckets for analysis
     df['Duration (minutes)'] = df['Duration'] / 60  # Convert seconds to minutes
-    
+
     # Create duration buckets
     duration_conditions = [
         (df['Duration (minutes)'] < 1),  # Less than 1 minute (typical Shorts)
@@ -110,7 +120,7 @@ def create_metrics(df):
         (df['Duration (minutes)'] >= 10) & (df['Duration (minutes)'] < 15),  # 10-15 minutes
         (df['Duration (minutes)'] >= 15)  # 15+ minutes
     ]
-    
+
     duration_values = [
         'Under 1 min',
         '1-3 min',
@@ -119,15 +129,15 @@ def create_metrics(df):
         '10-15 min',
         '15+ min'
     ]
-    
+
     df['Duration Bucket'] = np.select(duration_conditions, duration_values, default='Unknown')
-    
+
     return df
 
 def analyze_video_length_virality(df):
     """Analyze how video length affects virality"""
     print("Analyzing video length and virality relationship...")
-    
+
     # Group by duration bucket and calculate mean metrics
     duration_analysis = df.groupby('Duration Bucket').agg({
         'Content': 'count',  # Count of videos
@@ -143,7 +153,7 @@ def analyze_video_length_virality(df):
         'Completion Rate': 'mean',
         'Duration': 'mean'  # Average duration in seconds
     }).reset_index()
-    
+
     # Rename columns for clarity
     duration_analysis = duration_analysis.rename(columns={
         'Content': 'Number of Videos',
@@ -159,105 +169,123 @@ def analyze_video_length_virality(df):
         'Completion Rate': 'Avg. Completion Rate',
         'Duration': 'Avg. Duration (seconds)'
     })
-    
+
     # Sort by duration bucket in a logical order
     bucket_order = ['Under 1 min', '1-3 min', '3-5 min', '5-10 min', '10-15 min', '15+ min']
     duration_analysis['Duration Bucket'] = pd.Categorical(
-        duration_analysis['Duration Bucket'], 
-        categories=bucket_order, 
+        duration_analysis['Duration Bucket'],
+        categories=bucket_order,
         ordered=True
     )
     duration_analysis = duration_analysis.sort_values('Duration Bucket')
-    
+
     # Calculate correlation between duration and virality metrics
-    correlation_data = df[['Duration', 'Virality Score', 'Engagement Rate', 'Completion Rate', 
+    correlation_data = df[['Duration', 'Virality Score', 'Engagement Rate', 'Completion Rate',
                           'Stayed to watch (%)', 'Average percentage viewed (%)']].copy()
-    
+
     # Remove rows with NaN values
     correlation_data = correlation_data.dropna()
-    
+
     # Calculate Pearson correlation
     correlation_matrix = correlation_data.corr(method='pearson')
     duration_correlations = correlation_matrix['Duration'].sort_values(ascending=False)
-    
+
     # Create visualizations
     create_duration_virality_visualizations(df, duration_analysis, duration_correlations)
-    
+
     return duration_analysis, duration_correlations
 
 def create_duration_virality_visualizations(df, duration_analysis, duration_correlations):
     """Create visualizations for the video length and virality analysis"""
     print("Creating visualizations...")
-    
+
     # Set style
     sns.set(style="whitegrid")
     plt.rcParams.update({'font.size': 12})
-    
+
     # 1. Bar chart of average virality score by duration bucket
     plt.figure(figsize=(12, 6))
-    ax = sns.barplot(x='Duration Bucket', y='Avg. Virality Score', data=duration_analysis)
+
+    # Fill NaN values with 0 for visualization
+    plot_data = duration_analysis.copy()
+    plot_data['Avg. Virality Score'] = plot_data['Avg. Virality Score'].fillna(0)
+
+    ax = sns.barplot(x='Duration Bucket', y='Avg. Virality Score', data=plot_data)
     plt.title('Average Virality Score by Video Length', fontsize=16)
     plt.xlabel('Video Length', fontsize=14)
     plt.ylabel('Average Virality Score', fontsize=14)
     plt.xticks(rotation=45)
-    
+
     # Add value labels on top of bars
-    for i, v in enumerate(duration_analysis['Avg. Virality Score']):
-        ax.text(i, v + 0.1, f"{v:.2f}", ha='center', fontsize=10)
-    
+    for i, v in enumerate(plot_data['Avg. Virality Score']):
+        if pd.isna(v) or v == 0:
+            label = "N/A"  # For NaN or zero values
+        else:
+            label = f"{v:.2f}"
+        ax.text(i, v + 0.1, label, ha='center', fontsize=10)
+
+    # Add a note about missing data
+    plt.figtext(0.5, 0.01, 'Note: N/A indicates insufficient data for accurate virality score calculation',
+                ha='center', fontsize=10, style='italic')
+
     plt.tight_layout()
     plt.savefig('visualizations/virality_by_duration.png', dpi=300)
     plt.close()
-    
+
     # 2. Scatter plot of duration vs. virality score with regression line
     plt.figure(figsize=(10, 6))
-    sns.regplot(x='Duration', y='Virality Score', data=df, scatter_kws={'alpha':0.5}, line_kws={'color':'red'})
+    # Filter out extreme outliers for better visualization
+    plot_df = df[(df['Duration'] < 7000) & (df['Virality Score'] > -1000) & (df['Virality Score'] < 20)]
+    sns.regplot(x='Duration', y='Virality Score', data=plot_df, scatter_kws={'alpha':0.5}, line_kws={'color':'red'})
     plt.title('Relationship Between Video Duration and Virality Score', fontsize=16)
     plt.xlabel('Duration (seconds)', fontsize=14)
     plt.ylabel('Virality Score', fontsize=14)
+    # Add a note about data filtering
+    plt.figtext(0.5, 0.01, 'Note: Extreme outliers filtered for better visualization',
+                ha='center', fontsize=10, style='italic')
     plt.tight_layout()
     plt.savefig('visualizations/duration_virality_scatter.png', dpi=300)
     plt.close()
-    
+
     # 3. Correlation heatmap
     plt.figure(figsize=(10, 8))
-    correlation_data = df[['Duration', 'Virality Score', 'Engagement Rate', 
+    correlation_data = df[['Duration', 'Virality Score', 'Engagement Rate',
                           'Stayed to watch (%)', 'Average percentage viewed (%)']].corr()
-    
+
     mask = np.triu(np.ones_like(correlation_data, dtype=bool))
-    sns.heatmap(correlation_data, mask=mask, annot=True, cmap='coolwarm', vmin=-1, vmax=1, 
+    sns.heatmap(correlation_data, mask=mask, annot=True, cmap='coolwarm', vmin=-1, vmax=1,
                 square=True, linewidths=.5, cbar_kws={"shrink": .8})
-    
+
     plt.title('Correlation Between Duration and Engagement Metrics', fontsize=16)
     plt.tight_layout()
     plt.savefig('visualizations/duration_correlation_heatmap.png', dpi=300)
     plt.close()
-    
+
     # 4. Bar chart comparing engagement metrics across duration buckets
     plt.figure(figsize=(14, 8))
-    
+
     # Normalize the metrics for better comparison
     metrics = ['Avg. Engagement Rate (%)', 'Avg. Stayed to Watch (%)', 'Avg. Percentage Viewed (%)']
     duration_analysis_norm = duration_analysis.copy()
-    
+
     # Plot
     bar_width = 0.25
     x = np.arange(len(duration_analysis))
-    
+
     fig, ax = plt.subplots(figsize=(14, 8))
-    
+
     # Plot each metric
     for i, metric in enumerate(metrics):
-        ax.bar(x + i*bar_width, duration_analysis[metric], width=bar_width, 
+        ax.bar(x + i*bar_width, duration_analysis[metric], width=bar_width,
                label=metric.replace('Avg. ', '').replace(' (%)', ''))
-    
+
     ax.set_xlabel('Video Length', fontsize=14)
     ax.set_ylabel('Percentage (%)', fontsize=14)
     ax.set_title('Engagement Metrics by Video Length', fontsize=16)
     ax.set_xticks(x + bar_width)
     ax.set_xticklabels(duration_analysis['Duration Bucket'], rotation=45)
     ax.legend()
-    
+
     plt.tight_layout()
     plt.savefig('visualizations/engagement_by_duration.png', dpi=300)
     plt.close()
@@ -265,40 +293,40 @@ def create_duration_virality_visualizations(df, duration_analysis, duration_corr
 def add_to_report():
     """Add the video length and virality analysis to the HTML report"""
     print("Adding analysis to the HTML report...")
-    
+
     # Path to the HTML report
     report_path = 'report/youtube_analytics_report.html'
-    
+
     # Check if the report exists
     if not os.path.exists(report_path):
         print(f"Error: Report file not found at {report_path}")
         return
-    
+
     # Read the HTML content
     with open(report_path, 'r') as f:
         html_content = f.read()
-    
+
     # Create the new section HTML
     new_section = """
         <h2>6. Video Length and Virality Analysis</h2>
         <p>This section examines how video length affects virality and engagement metrics, providing insights for content strategy optimization.</p>
-        
+
         <h3>6.1 Virality Score by Video Length</h3>
         <p>The chart below shows how virality score varies across different video length categories:</p>
         <img src="../visualizations/virality_by_duration.png" alt="Virality Score by Video Length">
-        
+
         <h3>6.2 Relationship Between Duration and Virality</h3>
         <p>This scatter plot with regression line illustrates the correlation between video duration and virality score:</p>
         <img src="../visualizations/duration_virality_scatter.png" alt="Duration vs Virality Scatter Plot">
-        
+
         <h3>6.3 Correlation Between Duration and Engagement Metrics</h3>
         <p>The heatmap below shows how video duration correlates with various engagement metrics:</p>
         <img src="../visualizations/duration_correlation_heatmap.png" alt="Duration Correlation Heatmap">
-        
+
         <h3>6.4 Engagement Metrics by Video Length</h3>
         <p>This chart compares key engagement metrics across different video length categories:</p>
         <img src="../visualizations/engagement_by_duration.png" alt="Engagement Metrics by Video Length">
-        
+
         <h3>6.5 Key Findings</h3>
         <ul>
             <li>Videos between 1-3 minutes tend to have the highest virality scores, suggesting an optimal length for viral content.</li>
@@ -307,7 +335,7 @@ def add_to_report():
             <li>Viewer retention (percentage viewed) decreases as video length increases, highlighting the challenge of maintaining engagement in longer content.</li>
             <li>The sweet spot for maximizing both engagement and virality appears to be in the 1-5 minute range.</li>
         </ul>
-        
+
         <h3>6.6 Strategic Recommendations</h3>
         <ul>
             <li>For maximum virality, focus on creating content in the 1-3 minute range.</li>
@@ -317,17 +345,17 @@ def add_to_report():
             <li>Use YouTube Analytics retention curves to identify where viewers drop off in longer videos and optimize those sections.</li>
         </ul>
     """
-    
+
     # Find the position to insert the new section (before the closing body tag)
     match = re.search(r'</body>', html_content)
     if match:
         insert_position = match.start()
         modified_html = html_content[:insert_position] + new_section + html_content[insert_position:]
-        
+
         # Write the modified HTML back to the file
         with open(report_path, 'w') as f:
             f.write(modified_html)
-        
+
         print(f"Successfully added Video Length and Virality Analysis section to {report_path}")
     else:
         print(f"Error: Could not find insertion point in {report_path}")
@@ -337,22 +365,22 @@ def main():
     df = load_data()
     df_clean = clean_data(df)
     df_metrics = create_metrics(df_clean)
-    
+
     # Analyze video length and virality
     duration_analysis, duration_correlations = analyze_video_length_virality(df_metrics)
-    
+
     # Print summary of findings
     print("\n--- VIDEO LENGTH AND VIRALITY ANALYSIS ---")
     print("\nAverage metrics by video length:")
-    print(duration_analysis[['Duration Bucket', 'Number of Videos', 'Avg. Virality Score', 
+    print(duration_analysis[['Duration Bucket', 'Number of Videos', 'Avg. Virality Score',
                             'Avg. Engagement Rate (%)', 'Avg. Completion Rate']])
-    
+
     print("\nCorrelation between duration and engagement metrics:")
     print(duration_correlations)
-    
+
     # Add to report
     add_to_report()
-    
+
     print("\nAnalysis complete! New section added to the report.")
 
 if __name__ == "__main__":

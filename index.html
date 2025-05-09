@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Analytics Reports</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        
+        header {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #1a73e8;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #5f6368;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        
+        .reports-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .report-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 300px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .report-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .report-card h2 {
+            color: #1a73e8;
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+        
+        .report-card p {
+            color: #5f6368;
+            margin-bottom: 20px;
+        }
+        
+        .report-link {
+            display: inline-block;
+            background-color: #1a73e8;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        .report-link:hover {
+            background-color: #0d47a1;
+        }
+        
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #5f6368;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>YouTube Analytics Reports</h1>
+        <p class="subtitle">Comprehensive analysis of YouTube channel performance</p>
+    </header>
+    
+    <div class="reports-container">
+        <div class="report-card">
+            <h2>Main Impact Report</h2>
+            <p>Overview of YouTube analytics with key findings and recommendations. Includes performance metrics categorized by engaged view count buckets.</p>
+            <a href="report/youtube_analytics_report.html" class="report-link">View Report</a>
+        </div>
+        
+        <div class="report-card">
+            <h2>Statistical Analysis</h2>
+            <p>Detailed statistical analysis including regression analysis, feature importance, and hypothesis testing to determine which metrics impact video virality.</p>
+            <a href="statistical_analysis/statistical_report.html" class="report-link">View Report</a>
+        </div>
+        
+        <div class="report-card">
+            <h2>Cluster Analysis</h2>
+            <p>Deep dive into content archetypes identified through cluster analysis. Includes visualizations of cluster distributions and performance profiles.</p>
+            <a href="cluster_analysis_deep_dive_report.html" class="report-link">View Report</a>
+        </div>
+    </div>
+    
+    <footer>
+        <p>YouTube Analytics Reports | Generated May 2025</p>
+    </footer>
+</body>
+</html>

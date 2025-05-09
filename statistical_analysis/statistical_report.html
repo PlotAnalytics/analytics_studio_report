@@ -1,0 +1,426 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>YouTube Analytics Statistical Analysis Report</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                margin: 0;
+                padding: 20px;
+                color: #333;
+            }
+            h1, h2, h3 {
+                color: #1a73e8;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            .stat-box {
+                background-color: #f8f9fa;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            .significant {
+                color: #0d652d;
+                font-weight: bold;
+            }
+            .not-significant {
+                color: #c62828;
+            }
+            .summary-box {
+                background-color: #e8f0fe;
+                border-left: 5px solid #1a73e8;
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            img {
+                max-width: 100%;
+                height: auto;
+                margin: 20px 0;
+                border: 1px solid #ddd;
+            }
+            .math {
+                font-family: "Courier New", monospace;
+                background-color: #f5f5f5;
+                padding: 2px 4px;
+                border-radius: 3px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>YouTube Analytics Statistical Analysis Report</h1>
+        <p>Generated on 2025-05-09 19:34:23</p>
+
+        <div class="summary-box">
+            <h2>Executive Summary</h2>
+            <p>This report provides a comprehensive statistical analysis of YouTube performance metrics,
+            including hypothesis testing, regression analysis, and cluster analysis to identify patterns
+            and predictors of video performance.</p>
+        </div>
+
+        <h2>1. Descriptive Statistics</h2>
+        <p>Summary statistics for key performance metrics:</p>
+
+        <table>
+            <tr>
+                <th>Metric</th>
+                <th>Mean</th>
+                <th>Median</th>
+                <th>Std Dev</th>
+                <th>Min</th>
+                <th>Max</th>
+                <th>Skewness</th>
+            </tr>
+
+            <tr>
+                <td>Engaged views</td>
+                <td>183224.86</td>
+                <td>28309.00</td>
+                <td>420857.69</td>
+                <td>0.00</td>
+                <td>7420692.00</td>
+                <td>5.59</td>
+            </tr>
+
+
+
+            <tr>
+                <td>Comments added</td>
+                <td>93.88</td>
+                <td>21.00</td>
+                <td>300.51</td>
+                <td>0.00</td>
+                <td>11334.00</td>
+                <td>16.26</td>
+            </tr>
+
+            <tr>
+                <td>Likes</td>
+                <td>17318.61</td>
+                <td>2069.00</td>
+                <td>38957.10</td>
+                <td>-1440.00</td>
+                <td>540812.00</td>
+                <td>4.78</td>
+            </tr>
+
+            <tr>
+                <td>Watch time (hours)</td>
+                <td>4886.26</td>
+                <td>791.11</td>
+                <td>11438.11</td>
+                <td>0.00</td>
+                <td>185359.62</td>
+                <td>5.50</td>
+            </tr>
+
+            <tr>
+                <td>Subscribers</td>
+                <td>88.91</td>
+                <td>12.00</td>
+                <td>309.70</td>
+                <td>-1.00</td>
+                <td>7180.00</td>
+                <td>11.05</td>
+            </tr>
+
+            <tr>
+                <td>Stayed to watch (%)</td>
+                <td>77.76</td>
+                <td>80.93</td>
+                <td>12.51</td>
+                <td>0.00</td>
+                <td>100.00</td>
+                <td>-1.99</td>
+            </tr>
+
+            <tr>
+                <td>Average percentage viewed (%)</td>
+                <td>78.26</td>
+                <td>80.59</td>
+                <td>15.45</td>
+                <td>1.93</td>
+                <td>352.31</td>
+                <td>1.81</td>
+            </tr>
+
+            <tr>
+                <td>Engagement Rate</td>
+                <td>nan</td>
+                <td>5.78</td>
+                <td>nan</td>
+                <td>-inf</td>
+                <td>inf</td>
+                <td>nan</td>
+            </tr>
+
+            <tr>
+                <td>Virality Score</td>
+                <td>nan</td>
+                <td>36.29</td>
+                <td>nan</td>
+                <td>-inf</td>
+                <td>inf</td>
+                <td>nan</td>
+            </tr>
+
+            <tr>
+                <td>Growth Potential</td>
+                <td>2.83</td>
+                <td>1.65</td>
+                <td>5.16</td>
+                <td>-40.14</td>
+                <td>163.27</td>
+                <td>8.17</td>
+            </tr>
+
+        </table>
+
+        <div class="summary-box">
+            <h3>What This Means</h3>
+            <p>The descriptive statistics provide a snapshot of our YouTube performance metrics:</p>
+            <ul>
+                <li><strong>Mean vs. Median:</strong> When the mean is much higher than the median (as seen in metrics like Engaged views), it indicates that a small number of highly successful videos are pulling up the average. This is typical of viral content distribution.</li>
+                <li><strong>Standard Deviation:</strong> The large standard deviations show high variability in performance across videos, suggesting inconsistent results that are common in social media.</li>
+                <li><strong>Skewness:</strong> Positive skewness values (most metrics show this) indicate a right-skewed distribution - most videos perform below average with a few exceptional performers creating a long tail to the right.</li>
+            </ul>
+            <p>This pattern suggests we should focus on understanding what makes those exceptional videos perform well rather than trying to improve average performance across all content.</p>
+        </div>
+
+        <h2>2. Hypothesis Testing</h2>
+
+        <h3>2.1 Time Period Comparison (Jan-Mar vs April)</h3>
+        <p>Results of t-tests comparing performance metrics between Jan-Mar and April:</p>
+
+        <table>
+            <tr>
+                <th>Metric</th>
+                <th>t-statistic</th>
+                <th>p-value</th>
+                <th>Significant?</th>
+                <th>Higher in</th>
+            </tr>
+
+            <tr>
+                <td>Engaged views</td>
+                <td>19.66</td>
+                <td>0.0000</td>
+                <td class="significant">Yes</td>
+                <td>Jan-Mar</td>
+            </tr>
+
+            <tr>
+                <td>Engagement Rate</td>
+                <td>nan</td>
+                <td>nan</td>
+                <td class="not-significant">No</td>
+                <td>April</td>
+            </tr>
+
+            <tr>
+                <td>Virality Score</td>
+                <td>nan</td>
+                <td>nan</td>
+                <td class="not-significant">No</td>
+                <td>April</td>
+            </tr>
+
+            <tr>
+                <td>Growth Potential</td>
+                <td>10.07</td>
+                <td>0.0000</td>
+                <td class="significant">Yes</td>
+                <td>Jan-Mar</td>
+            </tr>
+
+        </table>
+
+        <div class="summary-box">
+            <h3>What This Means</h3>
+            <p>The t-test results compare performance between January-March and April:</p>
+            <ul>
+                <li><strong>Statistical Significance:</strong> When a result is marked as "Significant" (p-value < 0.05), it means we can be confident (95% confidence) that the difference between time periods is real and not due to random chance.</li>
+                <li><strong>Higher Performance Period:</strong> The "Higher in" column shows which time period had better performance for each metric. This helps identify seasonal trends or the impact of strategy changes.</li>
+                <li><strong>Business Impact:</strong> Focus on metrics that show both statistical significance AND substantial differences in means. Small differences might be statistically significant but not meaningful for business decisions.</li>
+            </ul>
+            <p>These results can help determine if recent changes to content strategy are working or if seasonal factors are affecting performance.</p>
+        </div>
+
+        <h3>2.2 Video Type Comparison (Shorts vs Long)</h3>
+        <p>Results of t-tests comparing performance metrics between Shorts and Long videos:</p>
+
+        <table>
+            <tr>
+                <th>Metric</th>
+                <th>t-statistic</th>
+                <th>p-value</th>
+                <th>Significant?</th>
+                <th>Higher in</th>
+            </tr>
+
+            <tr>
+                <td>Engaged views</td>
+                <td>27.73</td>
+                <td>0.0000</td>
+                <td class="significant">Yes</td>
+                <td>Shorts</td>
+            </tr>
+
+            <tr>
+                <td>Engagement Rate</td>
+                <td>nan</td>
+                <td>nan</td>
+                <td class="not-significant">No</td>
+                <td>Long</td>
+            </tr>
+
+            <tr>
+                <td>Virality Score</td>
+                <td>nan</td>
+                <td>nan</td>
+                <td class="not-significant">No</td>
+                <td>Long</td>
+            </tr>
+
+            <tr>
+                <td>Growth Potential</td>
+                <td>-16.20</td>
+                <td>0.0000</td>
+                <td class="significant">Yes</td>
+                <td>Long</td>
+            </tr>
+
+        </table>
+
+        <div class="summary-box">
+            <h3>What This Means</h3>
+            <p>These results compare the performance of short-form vs. long-form content:</p>
+            <ul>
+                <li><strong>Format Strengths:</strong> Each format (Shorts vs. Long) has different strengths. The "Higher in" column shows which format performs better for each metric.</li>
+                <li><strong>Resource Allocation:</strong> Use these results to determine where to focus resources. If Shorts consistently outperform Long videos in key metrics, consider shifting more resources to short-form content.</li>
+                <li><strong>Content Strategy:</strong> Different metrics may be more important for different business goals. For example, if subscriber growth is higher in Long videos but engagement is higher in Shorts, your strategy should reflect your priorities.</li>
+            </ul>
+            <p>This analysis helps optimize your content mix based on objective performance data rather than assumptions about what works best.</p>
+        </div>
+
+        <h2>3. Advanced Feature Importance Analysis</h2>
+        <p>Random Forest regression analysis to identify predictors of Engaged Views:</p>
+
+        <div class="stat-box">
+            <h3>Model Performance</h3>
+            <p>R-squared: <strong>0.9715</strong></p>
+            <p>RMSE: <strong>67989.63</strong></p>
+            <p>Sample Size: <strong>5155</strong></p>
+            <p>Model Type: <strong>Random Forest</strong></p>
+        </div>
+
+        <h3>Feature Importance</h3>
+        <p>Advanced feature importance analysis using Random Forest model:</p>
+
+        <img src="figures/random_forest_importance.png" alt="Random Forest Feature Importance" style="max-width: 800px; display: block; margin: 20px auto;">
+
+        <p class="chart-description" style="text-align: center; margin-top: -10px; font-style: italic;">
+            Higher values indicate stronger impact on predicting engaged views.
+        </p>
+
+        <p>Permutation importance (measures how much model performance decreases when a feature is randomly shuffled):</p>
+
+        <img src="figures/permutation_importance.png" alt="Permutation Feature Importance" style="max-width: 800px; display: block; margin: 20px auto;">
+
+        <p class="chart-description" style="text-align: center; margin-top: -10px; font-style: italic;">
+            Higher values indicate larger increase in prediction error when the feature is permuted (more important features).
+        </p>
+
+        <div class="summary-box">
+            <h3>What This Means</h3>
+            <p>The advanced Random Forest analysis identifies which factors most strongly predict engaged views:</p>
+            <ul>
+                <li><strong>R-squared Value:</strong> Our Random Forest model explains 97.15% of the variation in engaged views, which is higher than the linear regression model (95.71%). This indicates that the non-linear relationships captured by Random Forest provide better predictive power.</li>
+                <li><strong>Feature Importance Methods:</strong> We used two complementary methods to determine feature importance:
+                    <ul>
+                        <li><strong>Built-in Importance:</strong> Measures how much each feature contributes to reducing prediction error across all trees in the forest</li>
+                        <li><strong>Permutation Importance:</strong> Measures how much model performance decreases when a feature is randomly shuffled, which helps identify truly predictive features</li>
+                    </ul>
+                </li>
+                <li><strong>Key Findings:</strong>
+                    <ul>
+                        <li><strong>Likes</strong> are overwhelmingly the most important feature, accounting for 95.4% of the total importance in predicting engaged views</li>
+                        <li><strong>Watch time</strong> is the second most important feature (2.1%), but with much less impact than Likes</li>
+                        <li><strong>Duration</strong>, <strong>Subscribers</strong>, and <strong>Average percentage viewed</strong> each contribute less than 1% to the prediction</li>
+                        <li><strong>Comments</strong> and <strong>Impressions click-through rate</strong> have minimal impact on predicting engaged views</li>
+                    </ul>
+                </li>
+                <li><strong>Content Strategy Application:</strong> These results suggest that optimizing for Likes should be your primary focus, as they are by far the strongest predictor of engaged views. This is confirmed by both importance methods, making it a highly reliable finding.</li>
+            </ul>
+            <p>This advanced analysis provides more reliable insights than linear regression because it captures non-linear relationships and interactions between features, resulting in more accurate predictions and more reliable feature importance rankings.</p>
+        </div>
+
+        <h2>4. Cluster Analysis</h2>
+        <p>K-means clustering was used to identify natural groupings of videos based on performance metrics.</p>
+
+        <div class="stat-box">
+            <h3>Clustering Results</h3>
+            <p>Optimal number of clusters: <strong>4</strong></p>
+            <p>PCA variance explained: <strong>72.31%</strong> (PC1), <strong>18.76%</strong> (PC2)</p>
+        </div>
+
+        <img src="../statistical_analysis/figures/cluster_visualization.png" alt="Cluster Visualization" style="max-width: 800px; display: block; margin: 20px auto;">
+
+        <h3>Cluster Centers</h3>
+        <p>Average values of key metrics for each cluster:</p>
+
+        <table>
+            <tr>
+                <th>Cluster</th>
+    <th>Engaged views</th><th>Likes to Engaged Views Ratio</th><th>Comments to Engaged Views Ratio</th><th>Stayed to watch (%)</th><th>Average percentage viewed (%)</th><th>Virality Score</th><th>Growth Potential</th></tr><tr><td>Cluster 0</td><td>139379.79</td><td>6.44</td><td>0.05</td><td>80.69</td><td>82.78</td><td>40.06</td><td>1.82</td></tr><tr><td>Cluster 1</td><td>16291.54</td><td>4.07</td><td>0.21</td><td>63.35</td><td>61.31</td><td>41.45</td><td>6.04</td></tr><tr><td>Cluster 2</td><td>1520369.55</td><td>8.82</td><td>0.04</td><td>82.37</td><td>84.89</td><td>48.96</td><td>4.25</td></tr><tr><td>Cluster 3</td><td>1.00</td><td>-58300.00</td><td>0.00</td><td>100.00</td><td>12.17</td><td>-17440.00</td><td>0.00</td></tr>
+        </table>
+
+        <div class="summary-box">
+            <h3>What This Means</h3>
+            <p>Cluster analysis identifies natural groupings of videos with similar performance patterns:</p>
+            <ul>
+                <li><strong>Video Categories:</strong> Each cluster represents a distinct category of videos with similar performance characteristics. The table above shows the average metrics for each cluster.</li>
+                <li><strong>Content Archetypes:</strong> These clusters can be thought of as "content archetypes" - different types of videos that perform in characteristic ways.</li>
+                <li><strong>Strategic Applications:</strong>
+                    <ul>
+                        <li>Identify which clusters contain your most successful videos</li>
+                        <li>Analyze what these videos have in common beyond the metrics (topics, styles, etc.)</li>
+                        <li>Create more content that fits the profile of your best-performing clusters</li>
+                        <li>Consider reducing investment in content types that consistently fall into low-performing clusters</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>This analysis helps identify patterns that might not be obvious when looking at individual metrics, revealing natural groupings in your content performance.</p>
+        </div>
+
+        <h2>5. Conclusions</h2>
+        <div class="summary-box">
+            <h3>Key Statistical Findings</h3>
+            <ul>
+                <li>The advanced Random Forest analysis shows that <strong>Likes</strong> are overwhelmingly the most important predictor of Engaged Views (95.4% of total importance), followed by <strong>Watch time</strong> (2.1%).</li>
+                <li>Our Random Forest model achieves a higher R-squared (0.9715) than linear regression (0.9571), indicating better predictive accuracy.</li>
+                <li>There are statistically significant differences in performance between Jan-Mar and April periods.</li>
+                <li>Short-form and long-form content show distinct performance patterns across multiple metrics.</li>
+                <li>Videos naturally cluster into distinct groups based on their performance characteristics.</li>
+            </ul>
+        </div>
+
+    </body>
+    </html>

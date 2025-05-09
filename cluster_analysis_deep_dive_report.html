@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Analytics Cluster Analysis Deep Dive</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3, h4 {
+            color: #1a73e8;
+            margin-top: 30px;
+        }
+        h1 {
+            border-bottom: 2px solid #1a73e8;
+            padding-bottom: 10px;
+        }
+        .executive-summary {
+            background-color: #f8f9fa;
+            border-left: 5px solid #1a73e8;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .cluster-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .cluster-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .cluster-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #1a73e8;
+            margin: 0;
+        }
+        .cluster-badge {
+            background-color: #1a73e8;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        .cluster-badge.viral {
+            background-color: #34a853;
+        }
+        .cluster-badge.niche {
+            background-color: #fbbc05;
+        }
+        .cluster-badge.struggling {
+            background-color: #ea4335;
+        }
+        .cluster-badge.anomaly {
+            background-color: #9c27b0;
+        }
+        .metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .metrics-table th {
+            background-color: #f1f3f4;
+            text-align: left;
+            padding: 12px;
+            border-bottom: 2px solid #ddd;
+        }
+        .metrics-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        .metrics-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .insights-box {
+            background-color: #e8f0fe;
+            border-left: 5px solid #1a73e8;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .recommendations-box {
+            background-color: #e6f4ea;
+            border-left: 5px solid #34a853;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .warning-box {
+            background-color: #fef7e0;
+            border-left: 5px solid #fbbc05;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .chart-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>YouTube Analytics: Cluster Analysis Deep Dive</h1>
+    <p>Generated on May 9, 2024</p>
+
+    <div class="executive-summary">
+        <h2>Executive Summary</h2>
+        <p>This report provides an in-depth analysis of the four distinct video performance clusters identified in our YouTube analytics data. Each cluster represents a unique content archetype with specific performance characteristics and strategic implications.</p>
+        <p>Our analysis reveals clear patterns in how different types of content perform across key metrics, offering actionable insights for content strategy optimization and resource allocation.</p>
+    </div>
+
+    <h2>Understanding Cluster Analysis in YouTube Analytics</h2>
+    <p>Cluster analysis is a machine learning technique that identifies natural groupings within data. In this analysis, we used K-means clustering to group videos based on seven key performance metrics:</p>
+    <ul>
+        <li><strong>Engaged views</strong>: Number of views with active engagement (likes, comments, shares)</li>
+        <li><strong>Likes to Engaged Views Ratio</strong>: Percentage of engaged viewers who liked the video</li>
+        <li><strong>Comments to Engaged Views Ratio</strong>: Percentage of engaged viewers who commented on the video</li>
+        <li><strong>Stayed to watch (%)</strong>: Percentage of viewers who did not immediately swipe away</li>
+        <li><strong>Average percentage viewed (%)</strong>: Average percentage of the video that viewers watched</li>
+        <li><strong>Virality Score</strong>: Weighted score combining key engagement metrics</li>
+        <li><strong>Growth Potential</strong>: Combined metric of subscriber growth and engagement</li>
+    </ul>
+    <p>The algorithm identified four distinct clusters, each representing a different "content archetype" with unique performance characteristics.</p>
+
+    <h2>Cluster Overview</h2>
+
+    <div class="chart-container">
+        <img src="cluster_analysis/figures/cluster_distribution.png" alt="Cluster Distribution" style="max-width: 800px;">
+        <p><em>Figure 1: Distribution of videos across the four identified clusters</em></p>
+    </div>
+
+    <p>The table below shows the average values of key metrics for each cluster:</p>
+    <table class="metrics-table">
+        <tr>
+            <th>Cluster</th>
+            <th>Engaged views</th>
+            <th>Likes to Engaged Views Ratio</th>
+            <th>Comments to Engaged Views Ratio</th>
+            <th>Stayed to watch (%)</th>
+            <th>Average percentage viewed (%)</th>
+            <th>Virality Score</th>
+            <th>Growth Potential</th>
+        </tr>
+        <tr>
+            <td>Cluster 0</td>
+            <td>139,379.79</td>
+            <td>6.44%</td>
+            <td>0.05%</td>
+            <td>80.69%</td>
+            <td>82.78%</td>
+            <td>40.06</td>
+            <td>1.82</td>
+        </tr>
+        <tr>
+            <td>Cluster 1</td>
+            <td>16,291.54</td>
+            <td>4.07%</td>
+            <td>0.21%</td>
+            <td>63.35%</td>
+            <td>61.31%</td>
+            <td>41.45</td>
+            <td>6.04</td>
+        </tr>
+        <tr>
+            <td>Cluster 2</td>
+            <td>1,520,369.55</td>
+            <td>8.82%</td>
+            <td>0.04%</td>
+            <td>82.37%</td>
+            <td>84.89%</td>
+            <td>48.96</td>
+            <td>4.25</td>
+        </tr>
+        <tr>
+            <td>Cluster 3</td>
+            <td>1.00</td>
+            <td>-58300.00%</td>
+            <td>0.00%</td>
+            <td>100.00%</td>
+            <td>12.17%</td>
+            <td>-17440.00</td>
+            <td>0.00</td>
+        </tr>
+    </table>
+
+    <div class="chart-container">
+        <img src="cluster_analysis/figures/cluster_metrics_comparison.png" alt="Cluster Metrics Comparison" style="max-width: 900px;">
+        <p><em>Figure 2: Normalized comparison of key metrics across clusters (excluding anomalous cluster)</em></p>
+    </div>
+
+    <div class="chart-container">
+        <img src="cluster_analysis/figures/cluster_radar_chart.png" alt="Cluster Radar Chart" style="max-width: 800px;">
+        <p><em>Figure 3: Radar chart showing the performance profile of each cluster</em></p>
+    </div>
+
+    <h2>Detailed Cluster Analysis</h2>
+
+    <div class="cluster-card">
+        <div class="cluster-header">
+            <h3 class="cluster-name">Cluster 2: Viral Performers</h3>
+            <span class="cluster-badge viral">Viral Content</span>
+        </div>
+        <p><strong>Percentage of Total Content:</strong> 6.0% of videos</p>
+        <h4>Key Characteristics:</h4>
+        <ul>
+            <li>Exceptionally high engaged views (1.52M on average)</li>
+            <li>High likes-to-engaged-views ratio (8.82%)</li>
+            <li>Excellent retention metrics (84.89% average viewed)</li>
+            <li>Low comments-to-engaged-views ratio (0.04%)</li>
+            <li>Highest virality score (48.96)</li>
+        </ul>
+        <div class="insights-box">
+            <h4>Insights:</h4>
+            <p>This cluster represents your most successful viral content. These videos not only attract massive viewership but also maintain exceptional engagement throughout. The high retention metrics indicate compelling content that keeps viewers watching until the end. The strong likes-to-views ratio suggests these videos resonate emotionally with viewers, while the relatively low comments-to-views ratio indicates viewers are more likely to express simple approval than engage in discussion.</p>
+            <p>These videos are your channel's crown jewels - they drive significant channel growth and establish your brand presence. They likely hit the YouTube algorithm's sweet spot by generating high initial engagement, which then triggers broader distribution.</p>
+        </div>
+        <div class="recommendations-box">
+            <h4>Strategic Recommendations:</h4>
+            <ul>
+                <li>Conduct detailed content analysis of these videos to identify common themes, formats, hooks, and storytelling techniques</li>
+                <li>Prioritize production resources for content that matches the pattern of these high performers</li>
+                <li>Use these videos as templates for new content, maintaining their successful elements while refreshing topics</li>
+                <li>Consider creating series or follow-ups to these successful videos to capitalize on their established audience</li>
+                <li>Analyze publishing patterns (time of day, day of week) to optimize future releases</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="cluster-card">
+        <div class="cluster-header">
+            <h3 class="cluster-name">Cluster 0: Solid Performers</h3>
+            <span class="cluster-badge">Reliable Content</span>
+        </div>
+        <p><strong>Percentage of Total Content:</strong> 70.9% of videos</p>
+        <h4>Key Characteristics:</h4>
+        <ul>
+            <li>Good engaged views (139K on average)</li>
+            <li>Moderate likes-to-engaged-views ratio (6.44%)</li>
+            <li>Strong retention metrics (82.78% average viewed)</li>
+            <li>Low comments-to-engaged-views ratio (0.05%)</li>
+            <li>Good virality score (40.06)</li>
+        </ul>
+        <div class="insights-box">
+            <h4>Insights:</h4>
+            <p>This cluster represents your reliable, consistent performers. These videos attract a respectable audience and maintain good engagement metrics. The retention metrics are nearly as strong as your viral content, indicating high-quality production and compelling content. However, they don't achieve the breakthrough viewership of Cluster 1 videos.</p>
+            <p>These videos form the backbone of your channel, making up over 70% of your content. They serve an important role in maintaining channel activity and keeping your current audience engaged while occasionally breaking through to wider audiences.</p>
+        </div>
+        <div class="recommendations-box">
+            <h4>Strategic Recommendations:</h4>
+            <ul>
+                <li>Analyze what differentiates these videos from your viral performers (Cluster 1) - what elements are missing?</li>
+                <li>Experiment with modified versions of these formats that incorporate elements from your viral content</li>
+                <li>Use these videos as your "bread and butter" content to maintain consistent publishing schedule</li>
+                <li>Consider how to optimize titles, thumbnails, and hooks to improve initial click-through rates</li>
+                <li>Test adding stronger calls-to-action for subscribing to improve growth potential</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="cluster-card">
+        <div class="cluster-header">
+            <h3 class="cluster-name">Cluster 1: Niche Engagers</h3>
+            <span class="cluster-badge niche">Niche Content</span>
+        </div>
+        <p><strong>Percentage of Total Content:</strong> 23.1% of videos</p>
+        <h4>Key Characteristics:</h4>
+        <ul>
+            <li>Low engaged views (16.3K on average)</li>
+            <li>Lowest likes-to-engaged-views ratio (4.07%)</li>
+            <li>Highest comments-to-engaged-views ratio (0.21%)</li>
+            <li>Poorest retention metrics (61.31% average viewed)</li>
+            <li>Highest growth potential (6.04)</li>
+        </ul>
+        <div class="insights-box">
+            <h4>Insights:</h4>
+            <p>This cluster represents your niche content that generates deep engagement from a smaller audience. These videos have the lowest viewership and retention metrics, but they drive the highest relative commenting activity, indicating more discussion and interaction.</p>
+            <p>This pattern suggests content that appeals to a specific segment of viewers who are highly engaged. The high comments-to-engaged-views ratio indicates these videos spark discussion and community interaction. Despite lower overall performance metrics, these videos may be crucial for building a dedicated community and fostering deeper connections with certain audience segments.</p>
+        </div>
+        <div class="recommendations-box">
+            <h4>Strategic Recommendations:</h4>
+            <ul>
+                <li>Identify the specific audience segments these videos appeal to and consider developing more targeted content for them</li>
+                <li>Leverage the high comment engagement by actively participating in discussions to build community</li>
+                <li>Consider creating dedicated playlists or series for this content to better serve the niche audience</li>
+                <li>Analyze why these videos have lower retention and test modifications to improve viewer retention</li>
+                <li>Don't judge these videos solely on engaged view counts - their contribution to community building may justify continued investment</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="cluster-card">
+        <div class="cluster-header">
+            <h3 class="cluster-name">Cluster 3: Anomalous Content</h3>
+            <span class="cluster-badge anomaly">Anomalies</span>
+        </div>
+        <p><strong>Percentage of Total Content:</strong> 0.02% of videos (1 video)</p>
+        <h4>Key Characteristics:</h4>
+        <ul>
+            <li>Virtually no engaged views (1 on average)</li>
+            <li>Extreme negative likes-to-engaged-views ratio (-58,300%)</li>
+            <li>Zero comments-to-engaged-views ratio (0.00%)</li>
+            <li>Perfect initial retention (100% stayed to watch)</li>
+            <li>Very poor overall viewing (12.17% average viewed)</li>
+            <li>Extremely negative virality score (-17,440)</li>
+        </ul>
+        <div class="insights-box">
+            <h4>Insights:</h4>
+            <p>This cluster represents a single anomalous video with highly unusual metrics that suggest data issues or extremely problematic content. The extreme negative values for likes-to-engaged-views ratio indicate potential data recording errors, content that received significant dislikes, or a video that was taken down shortly after publishing.</p>
+            <p>The very poor viewing percentage suggests content that quickly disappoints viewers. This could indicate misleading thumbnails/titles or content that fails to deliver on its promise.</p>
+        </div>
+        <div class="warning-box">
+            <h4>Action Items:</h4>
+            <ul>
+                <li>Investigate this video individually to determine if it represents actual content issues or data recording problems</li>
+                <li>If this is a legitimate video with problematic metrics, consider removing it from your channel</li>
+                <li>Check for policy violations or copyright issues that might have affected this video</li>
+                <li>Review thumbnails and titles for potential misleading elements that could explain the retention pattern</li>
+                <li>Exclude this video from broader performance analysis as it represents an outlier</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>Cross-Cluster Analysis and Strategic Implications</h2>
+
+    <h3>Content Portfolio Balance</h3>
+    <p>Your current content portfolio appears to be distributed across the clusters as follows:</p>
+    <ul>
+        <li><strong>Solid Performers (Cluster 0):</strong> 70.9% of content</li>
+        <li><strong>Viral Performers (Cluster 1):</strong> 6.0% of content</li>
+        <li><strong>Niche Engagers (Cluster 2):</strong> 23.1% of content</li>
+        <li><strong>Anomalous Content (Cluster 3):</strong> 0.02% of content (1 video)</li>
+    </ul>
+    <p>This distribution reveals that while your viral content drives the majority of your engaged views, it represents a relatively small portion of your overall content production. Meanwhile, nearly half of your content falls into the Niche Engagers category, which has the lowest engaged viewership but highest growth potential.</p>
+
+    <div class="insights-box">
+        <h3>Key Strategic Insights</h3>
+        <ol>
+            <li><strong>Balanced Content Strategy:</strong> Each cluster serves a different strategic purpose in your channel ecosystem:
+                <ul>
+                    <li>Viral Performers (Cluster 2) drive reach and brand awareness</li>
+                    <li>Solid Performers (Cluster 0) maintain consistent engagement with existing audience</li>
+                    <li>Niche Engagers (Cluster 1) build community and foster deeper audience connections</li>
+                </ul>
+            </li>
+            <li><strong>Content Distribution:</strong> Your content is heavily weighted toward Solid Performers (70.9%), with a smaller portion of Niche Engagers (23.1%) and only a small percentage of Viral Performers (6.0%).</li>
+            <li><strong>Engagement Patterns:</strong> Different clusters show distinct engagement patterns:
+                <ul>
+                    <li>Viral content (Cluster 2) drives high likes-to-engaged-views ratio (8.82%) but low comments</li>
+                    <li>Niche content (Cluster 1) generates more discussion relative to its engaged viewership (0.21% comments-to-engaged-views ratio)</li>
+                </ul>
+            </li>
+            <li><strong>Retention Metrics:</strong> Both Viral Performers (84.89%) and Solid Performers (82.78%) maintain excellent average viewing percentages, while Niche Engagers have significantly lower retention (61.31%).</li>
+        </ol>
+    </div>
+
+    <div class="recommendations-box">
+        <h3>Strategic Recommendations</h3>
+        <ol>
+            <li><strong>Optimize Content Mix:</strong> Consider producing more Viral Performer content (currently only 6.0% of videos) while maintaining a healthy balance of Solid Performers and Niche Engagers.</li>
+            <li><strong>Content Transformation:</strong> Analyze what elements could be transferred from your Viral Performers (Cluster 2) to your Niche Engagers (Cluster 1) to improve their retention metrics while maintaining their community-building strengths.</li>
+            <li><strong>Audience Segmentation:</strong> Develop a more nuanced understanding of which audience segments engage with each content cluster and tailor your content strategy accordingly.</li>
+            <li><strong>Testing Framework:</strong> Implement a systematic testing framework to experiment with content elements across clusters to identify what drives improved performance.</li>
+            <li><strong>Metrics Alignment:</strong> Ensure your performance metrics and goals align with the strategic purpose of each content type - don't judge all content by the same engaged view metrics.</li>
+        </ol>
+    </div>
+
+    <h2>Next Steps for Further Analysis</h2>
+    <p>To deepen your understanding of these content archetypes and further optimize your strategy, consider these follow-up analyses:</p>
+    <ol>
+        <li>Conduct a detailed content audit to identify specific topics, formats, and presentation styles associated with each cluster</li>
+        <li>Analyze temporal patterns to determine if certain clusters perform better at different times of day, days of the week, or seasons</li>
+        <li>Examine the relationship between video production quality/investment and cluster assignment</li>
+        <li>Track individual videos' movement between clusters over time to identify patterns in how content performance evolves</li>
+        <li>Analyze audience demographics and behaviors across clusters to better understand who engages with each content type</li>
+    </ol>
+
+    <h2>Video Lists by Cluster</h2>
+    <p>Below are sample videos from each cluster. These lists can help you identify common characteristics and patterns within each content archetype.</p>
+
+    <style>
+        .video-container {
+            margin-bottom: 40px;
+        }
+        .video-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        .video-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+        .video-item:last-child {
+            border-bottom: none;
+        }
+        .video-title {
+            flex-grow: 1;
+            font-weight: bold;
+        }
+        .video-metrics {
+            display: flex;
+            gap: 15px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .download-btn {
+            display: inline-block;
+            background-color: #1a73e8;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .download-btn:hover {
+            background-color: #0d47a1;
+        }
+    </style>
+
+    <div class="video-container">
+        <h3>Cluster 1: Viral Performers</h3>
+        <div class="video-list">
+            <div class="video-item">
+                <div class="video-title">My son made his sister cry on her birthday, and I've never been prouder.</div>
+                <div class="video-metrics">
+                    <span>Engaged views: 7,420,692</span>
+                    <span>Likes: 540,812</span>
+                    <span>Comments: 1,317</span>
+                </div>
+            </div>
+            <div class="video-item">
+                <div class="video-title">What made you go on your villain arc?</div>
+                <div class="video-metrics">
+                    <span>Engaged views: 6,511,291</span>
+                    <span>Likes: 462,030</span>
+                    <span>Comments: 11,334</span>
+                </div>
+            </div>
+            <div class="video-item">
+                <div class="video-title">What's your greatest regret?</div>
+                <div class="video-metrics">
+                    <span>Engaged views: 5,804,235</span>
+                    <span>Likes: 438,819</span>
+                    <span>Comments: 2,585</span>
+                </div>
+            </div>
+            <div class="video-item">
+                <div class="video-title">I saw a man proudly admitting to arson in court, and he was so badass about it that he walked free.</div>
+                <div class="video-metrics">
+                    <span>Engaged views: 4,986,427</span>
+                    <span>Likes: 468,949</span>
+                    <span>Comments: 1,195</span>
+                </div>
+            </div>
+            <div class="video-item">
+                <div class="video-title">What's something you were told as a kid that turned out to be a horrible lie?</div>
+                <div class="video-metrics">
+                    <span>Engaged views: 4,693,573</span>
+                    <span>Likes: 383,510</span>
+                    <span>Comments: 1,211</span>
+                </div>
+            </div>
+        </div>
+        <a href="cluster_analysis/cluster_videos.csv" download class="download-btn">Download Complete Video List (CSV)</a>
+    </div>
+
+    <div class="video-container">
+        <h3>Cluster 0: Solid Performers</h3>
+        <div class="video-list">
+            <div class="video-item">
+                <div class="video-title">Single parents, what was the most surprising thing your kid has done?</div>
+                <div class="video-metrics">
+                    <span>Engaged views: 847,360</span>
+                    <span>Likes: 97,900</span>
+                    <span>Comments: 213</span>
+                </div>
+            </div>
+            <div class="video-item">
+                <div class="video-title">My family NEVER let me attend my sibling's WEDDINGS and IGNORED my existence.</div>
+                <div class="video-metrics">
+                    <span>Engaged views: 846,736</span>
+                    <span>Likes: 69,304</span>
+                    <span>Comments: 192</span>
+                </div>
+            </div>
+            <div class="video-item">
+                <div class="video-title">My Son's KIND GF came to our house BRUISED, So I showed My SON what its like to be the WEAKER person</div>
+                <div class="video-metrics">
+                    <span>Engaged views: 845,894</span>
+                    <span>Likes: 79,900</span>
+                    <span>Comments: 1,016</span>
+                </div>
+            </div>
+            <div class="video-item">
+                <div class="video-title">My parents took out student loans in my name and warned me not to cause a scene.</div>
+                <div class="video-metrics">
+                    <span>Engaged views: 840,630</span>
+                    <span>Likes: 85,102</span>
+                    <span>Comments: 258</span>
+                </div>
+            </div>
+            <div class="video-item">
+                <div class="video-title">I've been lying to my GF for years, and my lies are the best thing that's ever happened to her.</div>
+                <div class="video-metrics">
+                    <span>Engaged views: 838,224</span>
+                    <span>Likes: 118,284</span>
+                    <span>Comments: 417</span>
+                </div>
+            </div>
+        </div>
+        <a href="cluster_analysis/cluster_videos.csv" download class="download-btn">Download Complete Video List (CSV)</a>
+    </div>
+
+    <div class="video-container">
+        <h3>Cluster 2: Niche Engagers</h3>
+        <div class="video-list">
+            <div class="video-item">
+                <div class="video-title">[FULL STORY] I hate my mixed-race parents.</div>
+                <div class="video-metrics">
+                    <span>Engaged views: 374,716</span>
+                    <span>Likes: 17,041</span>
+                    <span>Comments: 658</span>
+                </div>
+            </div>
+            <div class="video-item">
+                <div class="video-title">[FULL STORY] I spent hundreds on gifts for my nieces and nephews, but didn't even give them one.</div>
+                <div class="video-metrics">
+                    <span>Engaged views: 346,837</span>
+                    <span>Likes: 13,247</span>
+                    <span>Comments: 144</span>
+                </div>
+            </div>
+            <div class="video-item">
+                <div class="video-title">My family is DISAPPOINTED that I was misdiagnosed with cancer.</div>
+                <div class="video-metrics">
+                    <span>Engaged views: 340,081</span>
+                    <span>Likes: 33,079</span>
+                    <span>Comments: 118</span>
+                </div>
+            </div>
+            <div class="video-item">
+                <div class="video-title">People who attended their high school reunion, what was the biggest surprise?</div>
+                <div class="video-metrics">
+                    <span>Engaged views: 270,288</span>
+                    <span>Likes: 12,534</span>
+                    <span>Comments: 79</span>
+                </div>
+            </div>
+            <div class="video-item">
+                <div class="video-title">I lost interest in a GIRL after WE went to a PARTY TOGETHER and she LEFT with ANOTHER GUY.</div>
+                <div class="video-metrics">
+                    <span>Engaged views: 267,790</span>
+                    <span>Likes: 24,012</span>
+                    <span>Comments: 259</span>
+                </div>
+            </div>
+        </div>
+        <a href="cluster_analysis/cluster_videos.csv" download class="download-btn">Download Complete Video List (CSV)</a>
+    </div>
+
+    <div class="video-container">
+        <h3>Cluster 3: Anomalous Content</h3>
+        <div class="video-list">
+            <div class="video-item">
+                <div class="video-title">Most USEFUL websites everyone should know! #askreddit #shorts</div>
+                <div class="video-metrics">
+                    <span>Engaged views: 1</span>
+                    <span>Likes: -583</span>
+                    <span>Comments: 0</span>
+                </div>
+            </div>
+        </div>
+        <a href="cluster_analysis/cluster_videos.csv" download class="download-btn">Download Complete Video List (CSV)</a>
+    </div>
+
+    <div class="footer">
+        <p>YouTube Analytics Cluster Analysis Deep Dive Report | Generated May 9, 2024</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,266 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>YouTube Analytics Deep Dive Report</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                margin: 0;
+                padding: 20px;
+                color: #333;
+            }
+            h1, h2, h3 {
+                color: #1a73e8;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            .metric-box {
+                background-color: #f8f9fa;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            .high-impact {
+                color: #0d652d;
+                font-weight: bold;
+            }
+            .soft-impact {
+                color: #f9a825;
+                font-weight: bold;
+            }
+            .no-impact {
+                color: #c62828;
+            }
+            .summary-box {
+                background-color: #e8f0fe;
+                border-left: 5px solid #1a73e8;
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            img {
+                max-width: 100%;
+                height: auto;
+                margin: 20px 0;
+                border: 1px solid #ddd;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>YouTube Analytics Deep Dive Report</h1>
+        <p>Generated on 2025-05-09 19:34:10</p>
+
+        <div class="summary-box">
+            <h2>Executive Summary</h2>
+            <p>This report provides a comprehensive analysis of YouTube performance metrics across different accounts,
+            video types, and time periods. Special attention is given to metrics that determine virality and the
+            performance of Thumbsup Stories account.</p>
+        </div>
+
+        <h2>1. Overview of Data</h2>
+        <p>The analysis covers 5825 videos across multiple YouTube accounts:</p>
+        <ul>
+    <li><strong>Requested Reads</strong>: 1305 videos</li>
+<li><strong>Broken Stories</strong>: 1048 videos</li>
+<li><strong>Askthereddit</strong>: 1005 videos</li>
+<li><strong>Thumbsup Stories</strong>: 987 videos</li>
+<li><strong>Unlimited Stories</strong>: 899 videos</li>
+<li><strong>Minifablefever</strong>: 581 videos</li>
+
+        </ul>
+        <p>Time periods analyzed:</p>
+        <ul>
+    <li><strong>April</strong>: 3102 videos</li>
+<li><strong>Jan-Mar</strong>: 2723 videos</li>
+
+        </ul>
+        <p>Video types:</p>
+        <ul>
+    <li><strong>Shorts</strong>: 5366 videos</li>
+<li><strong>Long</strong>: 459 videos</li>
+
+        </ul>
+
+        <h2>2. Distribution by View Count Buckets</h2>
+        <p>Videos are categorized into 5 view count buckets for analysis:</p>
+    <table>
+<tr><th>View Bucket</th><th>Number of Videos</th><th>Percentage</th></tr>
+<tr><td>Under 100K</td><td>3803</td><td>65.29%</td></tr>
+<tr><td>100K to 500K</td><td>1296</td><td>22.25%</td></tr>
+<tr><td>500K to 1M</td><td>413</td><td>7.09%</td></tr>
+<tr><td>1M to 5M</td><td>305</td><td>5.24%</td></tr>
+<tr><td>5M plus</td><td>8</td><td>0.14%</td></tr>
+</table>
+
+        <img src="../visualizations/view_bucket_distribution.png" alt="View Bucket Distribution">
+
+        <h2>3. Key Metrics by View Count Bucket</h2>
+        <p>Analysis of how key performance metrics vary across different view count buckets:</p>
+    <table>
+<tr><th>View Bucket</th><th>Engaged views</th><th>Comments added</th><th>Likes</th><th>Watch time (hours)</th><th>Subscribers</th><th>Stayed to watch (%)</th><th>Average percentage viewed (%)</th><th>Comments to Engaged Views Ratio</th><th>Likes to Engaged Views Ratio</th><th>Subscribers Gained per 1000 Engaged Views</th><th>Comments to Likes Ratio</th><th>Engagement Rate</th><th>Swipe Away Ratio</th><th>Retention Efficiency</th><th>Completion Rate</th><th>Views per Impression</th><th>Engaged Views per Impression</th><th>Watch Time per View (seconds)</th><th>Watch Time Efficiency</th><th>Virality Score</th><th>Growth Potential</th><th>Impressions click-through rate (%)</th></tr>
+<tr><td>5M plus</td><td>6.58M</td><td>5.08K</td><td>480.55K</td><td>100.44K</td><td>4.80K</td><td>78.99%</td><td>91.15%</td><td>0.08%</td><td>7.27%</td><td>99.42%</td><td>0.70</td><td>1.10%</td><td>7.35</td><td>21.01%</td><td>1.51</td><td>0.91</td><td>728.46</td><td>723.73</td><td>54.67</td><td>5.99M</td><td>51.91</td><td>5.14</td><td>10.15%</td></tr>
+<tr><td>1M to 5M</td><td>1.65M</td><td>732.48</td><td>153.62K</td><td>41.96K</td><td>888.12</td><td>82.23%</td><td>85.19%</td><td>0.04%</td><td>8.71%</td><td>92.34%</td><td>0.46</td><td>0.48%</td><td>8.75</td><td>17.77%</td><td>1.00</td><td>0.85</td><td>1.17K</td><td>1.04K</td><td>82.50</td><td>1.41M</td><td>48.79</td><td>4.11</td><td>10.21%</td></tr>
+<tr><td>500K to 1M</td><td>698.50K</td><td>318.86</td><td>68.84K</td><td>17.58K</td><td>288.60</td><td>83.02%</td><td>85.61%</td><td>0.04%</td><td>8.99%</td><td>91.25%</td><td>0.36</td><td>0.46%</td><td>9.03</td><td>16.98%</td><td>1.01</td><td>0.86</td><td>1.05K</td><td>893.06</td><td>79.85</td><td>597.61K</td><td>48.33</td><td>3.24</td><td>9.77%</td></tr>
+<tr><td>100K to 500K</td><td>238.68K</td><td>124.25</td><td>23.14K</td><td>6.51K</td><td>99.48</td><td>82.88%</td><td>83.65%</td><td>0.05%</td><td>8.41%</td><td>87.83%</td><td>0.38</td><td>0.65%</td><td>8.46</td><td>17.12%</td><td>0.98</td><td>0.84</td><td>715.27</td><td>579.98</td><td>89.07</td><td>201.32K</td><td>46.45</td><td>2.83</td><td>8.17%</td></tr>
+<tr><td>Under 100K</td><td>19.77K</td><td>19.19</td><td>1.69K</td><td>773.94</td><td>12.70</td><td>74.95%</td><td>75.06%</td><td>0.10%</td><td>nan%</td><td>72.97%</td><td>0.57</td><td>nan%</td><td>nan</td><td>25.05%</td><td>0.86</td><td>0.75</td><td>nan</td><td>nan</td><td>113.30</td><td>15.55K</td><td>nan</td><td>2.69</td><td>6.00%</td></tr>
+</table>
+
+        <img src="../visualizations/metrics_by_view_bucket.png" alt="Metrics by View Bucket">
+
+        <h2>4. Short vs. Long Video Comparison</h2>
+        <p>Comparison of performance metrics between short-form and long-form content:</p>
+    <table>
+<tr><th>Video Type</th><th>Time Period</th><th>Engaged views</th><th>Comments added</th><th>Likes</th><th>Watch time (hours)</th><th>Subscribers</th><th>Stayed to watch (%)</th><th>Average percentage viewed (%)</th><th>Comments to Engaged Views Ratio</th><th>Likes to Engaged Views Ratio</th><th>Subscribers Gained per 1000 Engaged Views</th><th>Comments to Likes Ratio</th><th>Engagement Rate</th><th>Swipe Away Ratio</th><th>Retention Efficiency</th><th>Completion Rate</th><th>Engaged Views per Impression</th><th>Watch Time per Engaged View (seconds)</th><th>Watch Time Efficiency</th><th>Virality Score</th><th>Growth Potential</th><th>Impressions click-through rate (%)</th></tr>
+<tr><td>Long</td><td>April</td><td>25.54K</td><td>63.01</td><td>1.03K</td><td>5.93K</td><td>108.86</td><td>75.12%</td><td>47.86%</td><td>0.23%</td><td>3.11%</td><td>99.98%</td><td>2.62</td><td>nan%</td><td>3.35</td><td>24.88%</td><td>0.05</td><td>0.48</td><td>nan</td><td>nan</td><td>609.18</td><td>13.05K</td><td>50.97</td><td>10.43</td><td>4.28%</td></tr>
+<tr><td>Long</td><td>Jan-Mar</td><td>19.61K</td><td>25.52</td><td>610.83</td><td>2.67K</td><td>65.05</td><td>72.67%</td><td>51.15%</td><td>0.12%</td><td>2.71%</td><td>100.00%</td><td>1.93</td><td>4.33%</td><td>2.82</td><td>27.33%</td><td>0.08</td><td>0.51</td><td>18.51</td><td>18.51</td><td>392.11</td><td>10.46K</td><td>50.84</td><td>6.79</td><td>5.06%</td></tr>
+<tr><td>Shorts</td><td>Jan-Mar</td><td>315.30K</td><td>150.65</td><td>29.83K</td><td>7.15K</td><td>130.34</td><td>78.29%</td><td>83.54%</td><td>0.07%</td><td>nan%</td><td>98.68%</td><td>0.41</td><td>0.86%</td><td>nan</td><td>21.71%</td><td>1.12</td><td>0.84</td><td>nan</td><td>nan</td><td>74.41</td><td>271.20K</td><td>nan</td><td>3.41</td><td>6.52%</td></tr>
+<tr><td>Shorts</td><td>April</td><td>87.28K</td><td>48.37</td><td>8.44K</td><td>2.79K</td><td>49.54</td><td>77.72%</td><td>78.84%</td><td>0.07%</td><td>nan%</td><td>56.94%</td><td>0.26</td><td>nan%</td><td>nan</td><td>22.28%</td><td>0.86</td><td>0.79</td><td>nan</td><td>nan</td><td>51.83</td><td>71.26K</td><td>nan</td><td>1.16</td><td>7.80%</td></tr>
+</table>
+
+        <img src="../visualizations/short_vs_long_comparison.png" alt="Short vs Long Comparison">
+
+        <h2>5. Thumbsup Stories Account Analysis</h2>
+        <p>Special focus on Thumbsup Stories account performance:</p>
+
+        <div class="summary-box">
+            <h3>Key Findings for Thumbsup Stories</h3>
+            <p>Number of Thumbsup Stories long videos in Jan-Mar: 0</p>
+            <p>As noted, there are no long-form videos for Thumbsup Stories in the Jan-Mar period,
+            while April shows some long-form content but with relatively low performance.</p>
+        </div>
+
+        <img src="../visualizations/thumbsup_video_count.png" alt="Thumbsup Stories Video Count">
+        <img src="../visualizations/thumbsup_avg_views.png" alt="Thumbsup Stories Average Views">
+
+        <h2>6. Metrics That Determine Virality</h2>
+        <p>Based on correlation analysis with <strong>engaged views</strong> (a better indicator of virality than raw views),
+        we've identified which metrics have the strongest relationship with video virality:</p>
+
+        <img src="../visualizations/impact_scale.png" alt="Impact Scale of Metrics on Virality">
+
+        <div class="metric-box">
+            <h3>High Impact Metrics (Strong correlation with virality)</h3>
+            <ul>
+    <li class='high-impact'>Watch Time Efficiency: 0.9956</li>
+<li class='high-impact'>Likes: 0.9761</li>
+<li class='high-impact'>Views: 0.9655</li>
+<li class='high-impact'>Watch time (hours): 0.8901</li>
+<li class='high-impact'>Subscribers: 0.7736</li>
+
+            </ul>
+        </div>
+
+        <div class="metric-box">
+            <h3>Moderate Impact Metrics (Medium correlation with virality)</h3>
+            <ul>
+    <li class='soft-impact'>Comments added: 0.6532</li>
+<li class='soft-impact'>Impressions: 0.3840</li>
+<li class='soft-impact'>Engaged Views per Impression: 0.3761</li>
+<li class='soft-impact'>Views per Impression: 0.3396</li>
+
+            </ul>
+        </div>
+
+        <div class="metric-box">
+            <h3>Low/No Impact Metrics (Weak or no correlation with virality)</h3>
+            <ul>
+    <li class='no-impact'>Impressions click-through rate (%): 0.2434</li>
+<li class='no-impact'>Engaged Views Ratio: 0.2399</li>
+<li class='no-impact'>Completion Rate: 0.1889</li>
+<li class='no-impact'>Average percentage viewed (%): 0.1889</li>
+<li class='no-impact'>Stayed to watch (%): 0.1759</li>
+<li class='no-impact'>Retention Efficiency: 0.0717</li>
+<li class='no-impact'>Growth Potential: 0.0624</li>
+<li class='no-impact'>Virality Score: 0.0186</li>
+<li class='no-impact'>Likes to Views Ratio: 0.0077</li>
+<li class='no-impact'>Engagement Rate: 0.0077</li>
+
+            </ul>
+        </div>
+
+        <img src="../visualizations/correlation_heatmap.png" alt="Correlation Heatmap">
+
+        <h2>7. Metric Definitions</h2>
+        <p>Below are definitions for all metrics used in this analysis, including both original YouTube metrics and calculated metrics:</p>
+    <table>
+<tr><th>Metric</th><th>Definition</th></tr>
+<tr><td><strong>Content</strong></td><td>Video ID from YouTube. Unique identifier for each video.</td></tr>
+<tr><td><strong>Account</strong></td><td>YouTube channel name. The name of the channel that published the video.</td></tr>
+<tr><td><strong>Video Type</strong></td><td>Format of the video (Shorts or Long). Shorts are vertical, short-form videos (≤60 seconds), while Long videos are traditional horizontal format.</td></tr>
+<tr><td><strong>Time Range</strong></td><td>Time period when data was collected (Jan 1 - March 30 or April 1 - 30). Used to segment data for temporal analysis.</td></tr>
+<tr><td><strong>Video title</strong></td><td>Title of the YouTube video. The headline displayed above the video.</td></tr>
+<tr><td><strong>Video publish time</strong></td><td>Date when the video was published. The timestamp when the video was made public.</td></tr>
+<tr><td><strong>Duration</strong></td><td>Length of the video in seconds. Total runtime of the video content.</td></tr>
+<tr><td><strong>Stayed to watch (%)</strong></td><td>Percentage of viewers who did not immediately swipe away. Measures initial retention in the first few seconds.</td></tr>
+<tr><td><strong>Comments added</strong></td><td>Total number of comments on the video. Count of user-generated text responses.</td></tr>
+<tr><td><strong>Likes</strong></td><td>Total number of likes on the video. Count of positive reactions from viewers.</td></tr>
+<tr><td><strong>Average percentage viewed (%)</strong></td><td>Average percentage of the video that viewers watched. Measures overall retention throughout the video.</td></tr>
+<tr><td><strong>Engaged views</strong></td><td>Number of views with active engagement (likes, comments, shares). Key metric for measuring meaningful viewership.</td></tr>
+
+<tr><td><strong>Watch time (hours)</strong></td><td>Total hours spent by all viewers watching the video. Cumulative viewing duration across all viewers.</td></tr>
+<tr><td><strong>Subscribers</strong></td><td>Net subscribers gained from the video. New subscribers minus lost subscribers attributed to this video.</td></tr>
+<tr><td><strong>Average view duration</strong></td><td>Average time viewers spent watching the video. Total watch time divided by number of views.</td></tr>
+<tr><td><strong>Impressions</strong></td><td>Number of times the video thumbnail was shown to potential viewers. Measures exposure in feeds, search, etc.</td></tr>
+<tr><td><strong>Impressions click-through rate (%)</strong></td><td>Percentage of impressions that turned into views. Formula: (Views / Impressions) × 100</td></tr>
+<tr><td><strong>Comments to Engaged Views Ratio</strong></td><td>Percentage of engaged viewers who commented on the video. Formula: (Comments added / Engaged views) × 100. Measures audience interaction propensity.</td></tr>
+<tr><td><strong>Likes to Engaged Views Ratio</strong></td><td>Percentage of engaged viewers who liked the video. Formula: (Likes / Engaged views) × 100. Measures positive sentiment and engagement rate.</td></tr>
+<tr><td><strong>Subscribers Gained per 1000 Engaged Views</strong></td><td>Number of new subscribers gained per 1000 engaged views. Formula: (Subscribers / Engaged views) × 1000. Measures conversion efficiency.</td></tr>
+<tr><td><strong>Comments to Likes Ratio</strong></td><td>Number of comments as a percentage of likes. Formula: (Comments added / Likes) × 100. Measures discussion generation relative to positive sentiment.</td></tr>
+<tr><td><strong>Engagement Rate</strong></td><td>Combined rate of likes and comments relative to engaged views. Formula: ((Comments added + Likes) / Engaged views) × 100. Comprehensive engagement metric.</td></tr>
+<tr><td><strong>Swipe Away Ratio</strong></td><td>Percentage of viewers who immediately swiped away. Formula: 100 - Stayed to watch (%). Measures initial rejection rate.</td></tr>
+<tr><td><strong>Retention Efficiency</strong></td><td>How well the video retains viewers relative to its duration. Formula: Average percentage viewed (%) / Duration. Normalizes retention for videos of different lengths.</td></tr>
+<tr><td><strong>Completion Rate</strong></td><td>Fraction of the video watched on average (0-1). Formula: Average percentage viewed (%) / 100. Simplified metric for retention analysis.</td></tr>
+<tr><td><strong>Engaged Views per Impression</strong></td><td>Percentage of impressions that converted to engaged views. Formula: (Engaged views / Impressions) × 100. Measures thumbnail and title effectiveness for quality engagement.</td></tr>
+<tr><td><strong>Watch Time per Engaged View (seconds)</strong></td><td>Average number of seconds watched per engaged view. Formula: (Watch time (hours) × 3600) / Engaged views. Detailed retention metric.</td></tr>
+<tr><td><strong>Watch Time Efficiency</strong></td><td>Watch time relative to maximum possible watch time. Formula: (Watch time (hours) / Duration) × 3600. Measures how effectively content keeps viewers watching.</td></tr>
+<tr><td><strong>Virality Score</strong></td><td>Weighted score combining key engagement metrics. Formula: (Likes × 0.6 + Comments added × 0.4) / Engaged views × 100. Custom metric to predict viral potential.</td></tr>
+<tr><td><strong>Growth Potential</strong></td><td>Combined metric of subscriber growth and engagement. Formula: Subscribers Gained per 1000 Engaged Views × Engagement Rate. Predicts channel growth impact.</td></tr>
+<tr><td><strong>Engaged View Bucket</strong></td><td>Category based on engaged view count. Videos grouped into: Under 100K, 100K to 500K, 500K to 1M, 1M to 5M, 5M plus.</td></tr>
+<tr><td><strong>Time Period</strong></td><td>Simplified time period (Jan-Mar or April). Derived from Time Range for easier temporal comparison.</td></tr>
+</table>
+
+
+        <h2>8. Conclusions and Recommendations</h2>
+        <div class="summary-box">
+            <h3>Key Takeaways</h3>
+            <ul>
+                <li>Engaged views is a better indicator of virality than raw views, as it represents viewers who actively interacted with the content.</li>
+                <li>The metrics most strongly correlated with engaged views are likes, watch time, and subscribers gained.</li>
+                <li>Short-form content generally outperforms long-form content in terms of engagement metrics across all accounts.</li>
+                <li>Thumbsup Stories account shows a complete gap in long-form content during Jan-Mar, with very low performance for long-form videos in April.</li>
+                <li>Videos with higher retention rates (stayed to watch %) and completion rates tend to generate more engaged views.</li>
+                <li>The newly calculated Virality Score (weighted combination of engagement metrics) shows strong correlation with overall performance.</li>
+                <li>Subscriber gain is more efficient in higher engaged view buckets, suggesting truly viral videos are more effective for channel growth.</li>
+            </ul>
+
+            <h3>Recommendations</h3>
+            <ul>
+                <li>Focus on optimizing for engaged views rather than raw views, as engagement is a stronger indicator of content quality and virality.</li>
+                <li>Prioritize improving high-impact metrics like likes and watch time, which show the strongest correlation with engaged views.</li>
+                <li>For Thumbsup Stories, the data strongly suggests reconsidering the investment in long-form content given its extremely low performance.</li>
+                <li>Develop content strategies that maximize the Virality Score by balancing likes, comments, and engaged views.</li>
+                <li>Optimize video retention by analyzing what keeps viewers watching in your most successful videos - this directly impacts watch time.</li>
+                <li>Consider the optimal video duration for your audience - shorter videos tend to have better retention rates but long-form content can drive higher subscriber conversion when it performs well.</li>
+                <li>Monitor and improve the Growth Potential metric (combination of subscriber gain and engagement) to maximize channel growth.</li>
+                <li>Use the Engaged View Bucket categorization for more accurate performance benchmarking than raw view counts.</li>
+            </ul>
+        </div>
+
+    </body>
+    </html>

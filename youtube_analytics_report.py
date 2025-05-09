@@ -169,7 +169,10 @@ def generate_html_report(df):
         for col in metrics_by_bucket.columns[1:]:
             value = row[col]
             if isinstance(value, (int, float)):
-                if 'Ratio' in col or 'percentage' in col.lower() or '%' in col:
+                # Special case for Subscribers Gained per 1000 Engaged Views - not a percentage
+                if col == 'Subscribers Gained per 1000 Engaged Views':
+                    html += f"<td>{value:.2f}</td>"
+                elif 'Ratio' in col or 'percentage' in col.lower() or '%' in col:
                     html += f"<td>{value:.2f}%</td>"
                 elif value > 1000000:
                     html += f"<td>{value/1000000:.2f}M</td>"
@@ -179,7 +182,8 @@ def generate_html_report(df):
                     html += f"<td>{value:.2f}</td>"
             else:
                 html += f"<td>{value}</td>"
-        html += "</tr>\n"
+        html += "</tr>
+"
 
     html += "</table>\n"
 
@@ -202,7 +206,10 @@ def generate_html_report(df):
         for col in video_type_comparison.columns[2:]:
             value = row[col]
             if isinstance(value, (int, float)):
-                if 'Ratio' in col or 'percentage' in col.lower() or '%' in col:
+                # Special case for Subscribers Gained per 1000 Engaged Views - not a percentage
+                if col == 'Subscribers Gained per 1000 Engaged Views':
+                    html += f"<td>{value:.2f}</td>"
+                elif 'Ratio' in col or 'percentage' in col.lower() or '%' in col:
                     html += f"<td>{value:.2f}%</td>"
                 elif value > 1000000:
                     html += f"<td>{value/1000000:.2f}M</td>"
@@ -212,7 +219,8 @@ def generate_html_report(df):
                     html += f"<td>{value:.2f}</td>"
             else:
                 html += f"<td>{value}</td>"
-        html += "</tr>\n"
+        html += "</tr>
+"
 
     html += "</table>\n"
 
